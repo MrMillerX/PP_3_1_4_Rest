@@ -9,66 +9,63 @@ function createTable() {
 
 let main = async () => {
     let authUser = await authorityUser();
+    let roles = await allRoles();
+
+    let navbar = document.querySelector(".navbar-brand").childNodes;
+    let navbarTemp = ``;
     const userRoles = authUser["roles"];
 
-    document.querySelector(".navbar-brand")
-        .childNodes[3].firstChild.textContent = authUser["username"];
-
-    if (userRoles.length !== 0) {
-        let temp = ``;
-        for (const userRolesKey of userRoles) {
-            temp += userRolesKey["name"] + ` `;
-        }
-        document.querySelector(".navbar-brand")
-            .childNodes[7].textContent = temp;
+    navbar[3].firstChild.textContent = authUser["username"];
+    for (const userRolesKey of userRoles) {
+        navbarTemp += userRolesKey["name"] + ` `;
     }
+    navbar[7].textContent = navbarTemp;
 
-    let roles = await allRoles();
     let newUser = document.getElementsByClassName("col-md bg-white border")[0];
     let tempNew = `
     <form align="center" class="offset-md-4 col-md-3 mt-4 mb-4"
-             id="newUserForm">
-           <label for="firstname3"><b>Name</b></label>
-           <input class="form-control" id="firstname3" maxlength="35" minlength="3"
-                  required type="text" name="name"/>
-           <br>
-           <label for="lastname3"><b>Last Name</b></label>
-           <input class="form-control" id="lastname3" maxlength="35" minlength="3"
-                  required type="text" name="lastName"/>
-           <br>
-           <label for="age3"><b>Age</b></label>
-           <input class="form-control" id="age3" max="100" min="1" type="number"
-           name="age"/>
-           <br>
-           <label for="username3"><b>Username</b></label>
-           <input class="form-control" id="username3" required type="text"
-           name="username"/>
-           <br>
-           <label for="password3"><b>Password</b></label>
-           <input class="form-control" id="password3" max="15" min="1" required
-                  type="password" name="password"/>
-           <br>
-           <label for="roles3"><b>Role</b></label>
-           <select class="form-control form-control-sm" id="roles3"
-                   multiple name="roles">`
+         id="newUserForm">
+       <label for="firstname3"><b>Name</b></label>
+       <input class="form-control" id="firstname3" maxlength="35" minlength="3"
+              required type="text" name="name"/>
+       <br>
+       <label for="lastname3"><b>Last Name</b></label>
+       <input class="form-control" id="lastname3" maxlength="35" minlength="3"
+              required type="text" name="lastName"/>
+       <br>
+       <label for="age3"><b>Age</b></label>
+       <input class="form-control" id="age3" max="100" min="1" type="number"
+       name="age"/>
+       <br>
+       <label for="username3"><b>Username</b></label>
+       <input class="form-control" id="username3" required type="text"
+       name="username"/>
+       <br>
+       <label for="password3"><b>Password</b></label>
+       <input class="form-control" id="password3" max="15" min="1" required
+              type="password" name="password"/>
+       <br>
+       <label for="roles3"><b>Role</b></label>
+       <select class="form-control form-control-sm" id="roles3"
+               multiple name="roles">`
     for (const role of roles) {
         tempNew += `
-                    <option selected
-                            value='{"roleId": "${role["roleId"]}","name": "${role["name"]}","authority": "${role["authority"]}"}'>
-                        ${role["name"]}
-                    </option>`
+            <option selected
+                    value='{"roleId": "${role["roleId"]}","name": "${role["name"]}","authority": "${role["authority"]}"}'>
+                ${role["name"]}
+            </option>`
     }
-    tempNew += `</select>
-           <br>
-           <button class="btn btn-success btn-lg" type="submit">Add new user
-           </button>
-       </form>`
+    tempNew += `
+        </select>
+        <br>
+        <button class="btn btn-success btn-lg" type="submit">Add new user
+        </button>
+        </form>`
     newUser.innerHTML = tempNew;
 
     let formNew = document.getElementById(`newUserForm`)
     formNew.onsubmit = async (e) => {
         e.preventDefault();
-        // document.getElementById(`closeDelete${user["id"]}`).click();
         const form = new FormData(formNew);
         let newUser = {};
 
@@ -102,7 +99,6 @@ let main = async () => {
     let tbodyTable = document.querySelector(".table").childNodes[1];
 
     for (let i = 0; i < getUsers.length; i++) {
-
         const user = getUsers[i];
 
         let trTable = document.createElement("tr");
@@ -138,11 +134,10 @@ let main = async () => {
         trTable.appendChild(userRoles);
 
         let userEditButton = document.createElement("td");
-        userEditButton.innerHTML =
-            `
-    <a class="btn btn-sm btn-primary" data-target="#editModal${user["id"]}"
-    data-toggle="modal"
-    type="button">Edit</a>`;
+        userEditButton.innerHTML = `
+        <a class="btn btn-sm btn-primary" data-target="#editModal${user["id"]}"
+        data-toggle="modal"
+        type="button">Edit</a>`;
         trTable.appendChild(userEditButton);
 
         let userDeleteButton = document.createElement("td");
@@ -158,8 +153,7 @@ let main = async () => {
 
 
         let userTr = document.getElementsByClassName(`user${user["id"]}`)[0];
-        temp =
-            `
+        temp = `
 <div aria-hidden="true" aria-labelledby="exampleModalLabel"
      class="modal fade"
      id="editModal${user["id"]}">
@@ -217,27 +211,26 @@ let main = async () => {
                     </option>`
         }
 
-        temp += `</select>
+        temp += `
+                    </select>
                     <br><br>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" type="submit">
-                        Edit
-                    </button>
-                    <button id="closeEdit${user["id"]}" class="btn btn-secondary" data-dismiss="modal"
-                            type="button">Close
-                    </button>
-                </div>
-            </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Edit
+                        </button>
+                        <button id="closeEdit${user["id"]}" class="btn btn-secondary" data-dismiss="modal"
+                                type="button">Close
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
     `;
         let tempDiv = document.createElement("div");
         tempDiv.innerHTML = temp;
         temp = ``
         userTr.appendChild(tempDiv);
-
 
         let formEdit = document.getElementById(`formEdit${user["id"]}`)
         formEdit.onsubmit = async (e) => {
